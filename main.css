@@ -1,0 +1,88 @@
+
+
+body {
+    background-color: #444444;
+}
+
+h1 {
+    text-align: center;
+
+}
+
+table {
+    border: 1px solid;
+    width: 100%;
+}
+
+td {
+    border: 1px solid;
+    padding: 3px 3px 3px 6px;
+}
+
+.trColomnTtitles {
+    font-weight: bold;
+    text-align: center;
+}
+
+.trColomnNumbers {
+    text-align: center;
+}
+
+.forSymbols {
+    float: right;
+    padding-right: 5px;
+    cursor: pointer;
+}
+
+/*.massegeContainer {
+    border: 1px solid lawngreen;
+    width: 420px;
+    border-radius: 10px;
+    margin-bottom: 5px;
+    padding: 5px;
+    color: darkseagreen;
+}*/
+
+
+.symbolUp {
+    content: '&#9652';
+}
+
+
+.symbolDown {
+    content: '&#9662';
+}
+
+
+.symbolNotSort {
+    content: '&#9672';
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
