@@ -19,7 +19,7 @@ td {
     padding: 3px 3px 3px 6px;
 }
 
-.trColomnTtitles {
+.trColomnTitles {
     font-weight: bold;
     text-align: center;
 }
@@ -44,18 +44,18 @@ td {
 }*/
 
 
-.symbolUp {
-    content: '&#9652';
+.symbolUp:after {
+    content: '▴';
 }
 
 
-.symbolDown {
-    content: '&#9662';
+.symbolDown:after {
+    content: '▾';
 }
 
 
-.symbolNotSort {
-    content: '&#9672';
+.symbolNotSort:after {
+    content: "◈";
 }
 
 

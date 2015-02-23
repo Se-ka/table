@@ -2,60 +2,75 @@
  * Created by sergiy on 05.02.15.
  */
 
-var bufferForInformation = [];
+bufferForInformation = [];
+number = 0;
+number1 = 0;
 
 
-var radyFunction = function() {
+radyFunction = function() {
+
     requestMasseges();
-    $('#symbolForStreet').on ("click", function clickForSort ()   {
-        $('#symbolForStreet').removeClass('symbolNotSort');
-        $('#symbolForStreet').addClass('symbolUp');
 
-        //$(symbol.target).parent().attr("sortBy")
 
-    }
-    );
 };
-
 $(radyFunction);
 
 
-var number = 0;
-var renderOneMessage = function (message) {
+renderOneMessage = function (information) {
     number++;
     $('tbody').append(
         "<tr>" +
-            "<td>"+number+"</td>" +
-            "<td>"+message.street+"</td>" +
-            "<td>"+message.city+"</td>" +
-            "<td>"+message.zip+"</td>" +
-            "<td>"+message.state+"</td>" +
-            "<td>"+message.beds+"</td>" +
-            "<td>"+message.baths+"</td>" +
-            "<td>"+message.sq__ft+"</td>" +
-            "<td>"+message.type+"</td>" +
-            "<td>"+message.sale_date+"</td>" +
-            "<td>"+message.price+"</td>" +
-            "<td>"+message.latitude+"</td>" +
-            "<td>"+message.longitude+"</td>" +
+            "<td>" + number +                   "</td>" +
+            "<td>" + information.street +       "</td>" +
+            "<td>" + information.city +         "</td>" +
+            "<td>" + information.zip +          "</td>" +
+            "<td>" + information.state +        "</td>" +
+            "<td>" + information.beds +         "</td>" +
+            "<td>" + information.baths +        "</td>" +
+            "<td>" + information.sq__ft +       "</td>" +
+            "<td>" + information.type +         "</td>" +
+            "<td>" + information.sale_date +    "</td>" +
+            "<td>" + information.price +        "</td>" +
+            "<td>" + information.latitude +     "</td>" +
+            "<td>" + information.longitude +    "</td>" +
         "</<tr>>");
 };
 
 
-var addInformInBufForForm = function (answerFromServer) {
+addInformInBufForForm = function (answerFromServer) {
     bufferForInformation = answerFromServer;
+    //console.log(bufferForInformation.length);
     takeMasseges();
 };
 
 
-var takeMasseges = function () {
-    filter();
-    console.log(bufferForInformation);
+attachListeners = function () {
+    $('.forSymbols').on ("click", function clickForSort (event)   {
+        var elem = $(event.target),
+            isUp = elem.hasClass("symbolDown");
+        console.log(elem);
+        $('.forSymbols').removeClass("symbolUp")
+            .removeClass("symbolDown")
+            .addClass("symbolNotSort");
+        elem.removeClass("symbolNotSort");
+        if (isUp) {
+            elem.addClass("symbolUp");
+        }
+        else{
+            elem.addClass("symbolDown");
+        }
+    });
+};
+
+
+takeMasseges = function () {
+    takeTheKeysInTheObject();
+    sort();
+    attachListeners();
     var l = bufferForInformation.length,
         i;
-
     for (i=0;i < l; i++) { // проходит по индексам массива(у нас там массив с объектами)
-        renderOneMessage(bufferForInformation[i]);
+    renderOneMessage(bufferForInformation[i]);
     }
     // и то, и то работает одинаково!!!!!!
     /*for (i in bufferForInformation) { // работает как по массиву, только проходит по ключам объектов
@@ -66,27 +81,48 @@ var takeMasseges = function () {
     */
 };
 
+information
 
-var requestMasseges = function() {
-    $.ajax({url:"convertcsv.json"
-})
-.done(addInformInBufForForm);
+
+
+displayOneColumns = function (key) {
+        number1++;
+    $('.trColomnNumbers').append("<td>" + number1 +"</td>");
+    $('.trColomnTitles').append("<td>" + key + "<span class='forSymbols symbolNotSort'></span></td>");
 };
 
 
-var filter = function () {
-    console.log(bufferForInformation);
-var c, l = bufferForInformation.length, i, buf;
-for (c = 0; c < l; c++) {
-    for (i = 0; i < l - 1; i++) {
-        if (bufferForInformation[i].key > bufferForInformation[i+1].key) {
-            buf = bufferForInformation[i];
-            bufferForInformation[i] = bufferForInformation[i+1];
-            bufferForInformation[i+1] = buf;
-        }
-
+takeTheKeysInTheObject = function () {
+    var key;
+    for (key in bufferForInformation[0]) {
+        displayOneColumns(key);
     }
-}
+};
+
+requestMasseges = function() {
+    $.ajax({url:"convertcsv.json"
+})
+.done(takeTheKeysInTheObject, addInformInBufForForm);
+};
+
+
+sort = function () {
+   // console.log(bufferForInformation);
+
+    //$(symbol.target).parent().attr("sortBy")
+
+    var c, bFI = bufferForInformation, l = bFI.length, i, buf;
+    console.log(l);
+    for (c = 0; c < l; c++) {
+        for (i = 0; i < l - 1; i++) {
+            if (bFI[i].key > bFI[i+1].key) {
+                buf = bFI[i];
+                bFI[i] = bFI[i+1];
+                bFI[i+1] = buf;
+            }
+        }
+    }
+    console.log(bFI[0].street);
 };
 
 
