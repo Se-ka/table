@@ -10,17 +10,13 @@ keyForSortDirections = false;
 
 
 radyFunction = function() {
-
     requestMasseges();
-
-
 };
 $(radyFunction);
 
 
 addInformInBufForForm = function (answerFromServer) {
     bufferForInformation = answerFromServer;
-    //console.log(bufferForInformation.length);
     renderInformation();
 };
 
@@ -29,12 +25,11 @@ attachListeners = function () {
     $('.forSymbols').on ("click", function clickForSort (event)   {
         var elem = $(event.target),
             isDown = elem.hasClass("symbolDown");
-
         keyForSorting = $(elem).parent().attr("sortkey");
-
         console.log(elem);
         console.log($(elem).parent().attr("sortkey"));
-        $('.forSymbols').removeClass("symbolUp")
+        $('.forSymbols')
+            .removeClass("symbolUp")
             .removeClass("symbolDown")
             .addClass("symbolNotSort");
         elem.removeClass("symbolNotSort");
@@ -46,20 +41,27 @@ attachListeners = function () {
             elem.addClass("symbolDown");
             keyForSortDirections = true;
         }
-        //attachListeners();
         sort();
+        renderInformation();
     });
 };
 
 
 renderInformation = function () {
-    var key, l = bufferForInformation.length, i;
+    var key, l = bufferForInformation.length, i, tbody = $('tbody');
+        tbody.empty();
+        tbody.append("<tr class='trTag1 trColomnNumbers'></tr>");
+    var trTag1 = $(".trTag1");
+        trTag1.append("<td></td>");
+    tbody.append("<tr class='trTag2 trColomnTitles'></tr>");
+    var trTag2 = $(".trTag2");
+    trTag2.append("<td></td>");
     for (key in bufferForInformation[0]) {
         //відмальовує дві головні(основні) строки
         number1++;
-        $('tbody').append("<td>" + number1 +"</td>");//номери
+        trTag1.append("<td>" + number1 +"</td>");//номери
         //назви колонок
-        $('.trColomnTitles').append("<td sortkey = '" + key + "'>" + key + "<span class='forSymbols symbolNotSort'></span></td>");
+        trTag2.append("<td sortkey = '" + key + "'>" + key + "<span class='forSymbols symbolNotSort'></span></td>");
     }
     for (i=0;i < l; i++) { // проходит по индексам массива(у нас там массив с объектами)
         // и то, и то работает одинаково!!!!!!
@@ -70,7 +72,7 @@ renderInformation = function () {
          }
          */
         number++;
-        $('tbody').append(
+        tbody.append(
             "<tr>" +
             "<td>" + number +                               "</td>" +
             "<td>" + bufferForInformation[i].street +       "</td>" +
@@ -88,7 +90,10 @@ renderInformation = function () {
             "</<tr>>");
     }
     attachListeners();
+    number = 0;
+    number1 = 0;
 };
+
 
 requestMasseges = function() {
     $.ajax({url:"convertcsv.json"
@@ -98,10 +103,6 @@ requestMasseges = function() {
 
 
 sort = function () {
-   // console.log(bufferForInformation);
-
-    //$(symbol.target).parent().attr("sortBy")
-
     var c, bFI = bufferForInformation, l = bFI.length, i, buf;
     console.log(l);
     for (c = 0; c < l; c++) {
@@ -123,8 +124,6 @@ sort = function () {
             }
         }
     }
-    $('tbody').empty();
-    renderInformation();
     console.log(bFI[0].street, "3");
 };
 
