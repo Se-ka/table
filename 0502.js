@@ -21,26 +21,31 @@ addInformInBufForForm = function (answerFromServer) {
 };
 
 
+changeSymbols = function (event) {
+    var elem = $(event.target),
+        isDown = elem.hasClass("symbolDown");
+    $('.forSymbols')
+        .removeClass("symbolUp")
+        .removeClass("symbolDown")
+        .addClass("symbolNotSort");
+    elem.removeClass("symbolNotSort");
+    keyForSorting = $(elem).parent().attr("sortkey");
+    console.log(elem);
+    console.log($(elem).parent().attr("sortkey"));
+    if (isDown) {
+        elem.addClass("symbolUp");
+        keyForSortDirections = false;
+    }
+    else{
+        elem.addClass("symbolDown");
+        keyForSortDirections = true;
+    }
+};
+
+
 attachListeners = function () {
     $('.forSymbols').on ("click", function clickForSort (event)   {
-        var elem = $(event.target),
-            isDown = elem.hasClass("symbolDown");
-        keyForSorting = $(elem).parent().attr("sortkey");
-        console.log(elem);
-        console.log($(elem).parent().attr("sortkey"));
-        $('.forSymbols')
-            .removeClass("symbolUp")
-            .removeClass("symbolDown")
-            .addClass("symbolNotSort");
-        elem.removeClass("symbolNotSort");
-        if (isDown) {
-            elem.addClass("symbolUp");
-            keyForSortDirections = false;
-        }
-        else{
-            elem.addClass("symbolDown");
-            keyForSortDirections = true;
-        }
+        changeSymbols(event);
         sort();
         renderInformation();
     });
@@ -56,13 +61,26 @@ renderInformation = function () {
     tbody.append("<tr class='trTag2 trColomnTitles'></tr>");
     var trTag2 = $(".trTag2");
     trTag2.append("<td></td>");
-    for (key in bufferForInformation[0]) {
+
+
+    for (key in bufferForInformation[0]) { // пошли по ключам первого объекта
         //відмальовує дві головні(основні) строки
         number1++;
         trTag1.append("<td>" + number1 +"</td>");//номери
+        // вводим переменную для использования её при повторной отрисовке, по нажатию на символ сортировки
+        var dynamicSymbolSort = "symbolNotSort";
+        if (keyForSorting === key) { // если значение переменной keyForSorting равно - key
+            if (keyForSortDirections === true) { //
+                dynamicSymbolSort = "symbolDown"; //
+            } else { //
+                dynamicSymbolSort = "symbolUp"; //
+            }
+        }
         //назви колонок
-        trTag2.append("<td sortkey = '" + key + "'>" + key + "<span class='forSymbols symbolNotSort'></span></td>");
+        trTag2.append("<td sortkey = '" + key + "'>" + key + "<span class='forSymbols " + dynamicSymbolSort + "'></span></td>");
     }
+
+
     for (i=0;i < l; i++) { // проходит по индексам массива(у нас там массив с объектами)
         // и то, и то работает одинаково!!!!!!
         /*for (i in bufferForInformation) { // работает как по массиву, только проходит по ключам объектов
