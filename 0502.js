@@ -8,18 +8,19 @@ number1 = 0;
 keyForSorting = false;
 keyForSortDirections = false;
 
+var startTime;
 
-radyFunction = function() {
+readyFunction = function() {
+	startTime = (new Date()).getTime();
     requestMasseges();
 };
-$(radyFunction);
 
+$(readyFunction);
 
 addInformInBufForForm = function (answerFromServer) {
     bufferForInformation = answerFromServer;
     renderInformation();
 };
-
 
 changeSymbols = function (event) {
     var elem = $(event.target),
@@ -42,7 +43,6 @@ changeSymbols = function (event) {
     }
 };
 
-
 attachListeners = function () {
     $('.forSymbols').on ("click", function clickForSort (event)   {
         changeSymbols(event);
@@ -51,24 +51,49 @@ attachListeners = function () {
     });
 };
 
-
 renderInformation = function () {
-    var key, l = bufferForInformation.length, i, tbody = $('tbody');
-        tbody.empty();
-        tbody.append("<tr class='trTag1 trColomnNumbers'></tr>");
-    var trTag1 = $(".trTag1");
-        trTag1.append("<td></td>");
-    tbody.append("<tr class='trTag2 trColomnTitles'></tr>");
-    var trTag2 = $(".trTag2");
-    trTag2.append("<td></td>");
+
+    var key,
+	    l = bufferForInformation.length,
+	    i,
+	    tr, trNumbers, trTitles, span, td, textNode;
+
+    var domFragment = document.createDocumentFragment();
+	var tbody = document.createElement("tbody");
+	domFragment.appendChild(tbody);
+
+	//var tbody = ($("tbody").empty())[0];
+
+
+	trNumbers = document.createElement("tr");
+	trNumbers.className = "trTag1 trColomnNumbers";
+	td = document.createElement("td");
+	trNumbers.appendChild(td);
+	tbody.appendChild(trNumbers);
+
+
+	trTitles = document.createElement("tr");
+	trTitles.className = "trTag2 trColomnTitles";
+	td = document.createElement("td");
+	trTitles.appendChild(td);
+	tbody.appendChild(trTitles);
 
 
     for (key in bufferForInformation[0]) { // пошли по ключам первого объекта
+	    
+	    if (!bufferForInformation[0].hasOwnProperty(key)) { continue; }
+	    
         //відмальовує дві головні(основні) строки
         number1++;
-        trTag1.append("<td>" + number1 +"</td>");//номери
+
+	    td = document.createElement("td");
+	    textNode = document.createTextNode(number1);
+	    td.appendChild(textNode);
+        trNumbers.appendChild(td);//номери
+
         // вводим переменную для использования её при повторной отрисовке, по нажатию на символ сортировки
         var dynamicSymbolSort = "symbolNotSort";
+	    
         if (keyForSorting === key) { // если значение переменной keyForSorting равно - key
             if (keyForSortDirections === true) { //
                 dynamicSymbolSort = "symbolDown"; //
@@ -77,11 +102,24 @@ renderInformation = function () {
             }
         }
         //назви колонок
-        trTag2.append("<td sortkey = '" + key + "'>" + key + "<span class='forSymbols " + dynamicSymbolSort + "'></span></td>");
+
+	    span = document.createElement("span");
+	    span.className = "forSymbols " + dynamicSymbolSort;
+
+	    td = document.createElement("td");
+	    td.setAttribute("sortkey", key);
+	    td.appendChild(document.createTextNode(key));
+	    td.appendChild(span);
+
+	    trTitles.appendChild(td);
     }
 
+	
+	
 
-    for (i=0;i < l; i++) { // проходит по индексам массива(у нас там массив с объектами)
+
+	var z = 0;
+    for (i = 0; i < l; i++) { // проходит по индексам массива(у нас там массив с объектами)
         // и то, и то работает одинаково!!!!!!
         /*for (i in bufferForInformation) { // работает как по массиву, только проходит по ключам объектов
          //(каждый наш объект получает ключ(индекс) от 0 и ..., но названия настоящих ключей не меняются)
@@ -89,36 +127,45 @@ renderInformation = function () {
          renderOneMessage(bufferForInformation[i]);
          }
          */
+
         number++;
-        tbody.append(
-            "<tr>" +
-            "<td>" + number +                               "</td>" +
-            "<td>" + bufferForInformation[i].street +       "</td>" +
-            "<td>" + bufferForInformation[i].city +         "</td>" +
-            "<td>" + bufferForInformation[i].zip +          "</td>" +
-            "<td>" + bufferForInformation[i].state +        "</td>" +
-            "<td>" + bufferForInformation[i].beds +         "</td>" +
-            "<td>" + bufferForInformation[i].baths +        "</td>" +
-            "<td>" + bufferForInformation[i].sq__ft +       "</td>" +
-            "<td>" + bufferForInformation[i].type +         "</td>" +
-            "<td>" + bufferForInformation[i].sale_date +    "</td>" +
-            "<td>" + bufferForInformation[i].price +        "</td>" +
-            "<td>" + bufferForInformation[i].latitude +     "</td>" +
-            "<td>" + bufferForInformation[i].longitude +    "</td>" +
-            "</<tr>>");
+	    
+	    tr = document.createElement("tr");
+	    
+	    td = document.createElement("td");
+	    textNode = document.createTextNode(number);
+	    td.appendChild(textNode);
+	    tr.appendChild(td);
+
+	    for (key in bufferForInformation[0]) { // пошли по ключам первого объекта
+		    if (!bufferForInformation[0].hasOwnProperty(key)) { continue; }
+		    
+		    td = document.createElement("td");
+		    textNode = document.createTextNode(bufferForInformation[i][key]);
+		    td.appendChild(textNode);
+		    tr.appendChild(td);
+	    }
+
+	    tbody.appendChild(tr);
+	    
+	    //z = z + tr.clientHeight;
     }
+	console.log(z);
+
+	($("table").empty())[0].appendChild(domFragment);
+
     attachListeners();
     number = 0;
     number1 = 0;
-};
 
+	finishTime = (new Date()).getTime();
+	
+	console.log("Time spent: ", finishTime - startTime);
+};
 
 requestMasseges = function() {
-    $.ajax({url:"convertcsv.json"
-})
-.done(addInformInBufForForm);
+    $.ajax({url:"convertcsv.json"}).done(addInformInBufForForm);
 };
-
 
 sort = function () {
     var c, bFI = bufferForInformation, l = bFI.length, i, buf;
@@ -144,8 +191,3 @@ sort = function () {
     }
     console.log(bFI[0].street, "3");
 };
-
-
-
-
-
