@@ -114,10 +114,6 @@ renderInformation = function () {
 	    trTitles.appendChild(td);
     }
 
-	
-	
-
-
 	var z = 0;
     for (i = 0; i < l; i++) { // проходит по индексам массива(у нас там массив с объектами)
         // и то, и то работает одинаково!!!!!!
@@ -168,26 +164,37 @@ requestMasseges = function() {
 };
 
 sort = function () {
-    var c, bFI = bufferForInformation, l = bFI.length, i, buf;
+    var c, l = bufferForInformation.length, i, buf;
     console.log(l);
+
+    if (keyForSortDirections === true) {
+        bufferForInformation = _.sortBy(bufferForInformation, function (bufferForInformation) {
+            return bufferForInformation[keyForSorting];
+        });
+    } else {
+        bufferForInformation.reverse();
+    }
+
+    /*
     for (c = 0; c < l; c++) {
         for (i = 0; i < l - 1; i++) {
             if (keyForSortDirections === false) {
-                if (bFI[i][keyForSorting] > bFI[i + 1][keyForSorting]) {
-                    buf = bFI[i];
-                    bFI[i] = bFI[i + 1];
-                    bFI[i + 1] = buf;
-                    //console.log(bFI[0].street, "1");
+                if (bufferForInformation[i][keyForSorting] > bufferForInformation[i + 1][keyForSorting]) {
+                    buf = bufferForInformation[i];
+     bufferForInformation[i] = bufferForInformation[i + 1];
+     bufferForInformation[i + 1] = buf;
+                    //console.log(bufferForInformation[0].street, "1");
                 }
             } else {
-                if (bFI[i][keyForSorting] < bFI[i + 1][keyForSorting]) {
-                    buf = bFI[i];
-                    bFI[i] = bFI[i + 1];
-                    bFI[i + 1] = buf;
-                    //console.log(bFI[0].street, "2");
+                if (bufferForInformation[i][keyForSorting] < bufferForInformation[i + 1][keyForSorting]) {
+                    buf = bufferForInformation[i];
+     bufferForInformation[i] = bufferForInformation[i + 1];
+     bufferForInformation[i + 1] = buf;
+                    //console.log(bufferForInformation[0].street, "2");
                 }
             }
         }
     }
-    console.log(bFI[0].street, "3");
+    */
+    console.log(bufferForInformation[0].street, "3");
 };
