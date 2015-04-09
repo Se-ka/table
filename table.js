@@ -31,8 +31,6 @@ changeSymbols = function (event) {
         .addClass("symbolNotSort");
     elem.removeClass("symbolNotSort");
     keyForSorting = $(elem).parent().attr("sortkey");
-    console.log(elem);
-    console.log($(elem).parent().attr("sortkey"));
     if (isDown) {
         elem.addClass("symbolUp");
         keyForSortDirections = false;
@@ -133,7 +131,7 @@ renderInformation = function () {
 	    td.appendChild(textNode);
 	    tr.appendChild(td);
 
-	    for (key in bufferForInformation[0]) { // пошли по ключам первого объекта
+	    for (key in bufferForInformation[0]) { // пішли по ключах першого об'єкта
 		    if (!bufferForInformation[0].hasOwnProperty(key)) { continue; }
 		    
 		    td = document.createElement("td");
@@ -143,20 +141,14 @@ renderInformation = function () {
 	    }
 
 	    tbody.appendChild(tr);
-	    
-	    //z = z + tr.clientHeight;
     }
-	console.log(z);
 
 	($("table").empty())[0].appendChild(domFragment);
 
     attachListeners();
     number = 0;
     number1 = 0;
-
 	finishTime = (new Date()).getTime();
-	
-	console.log("Time spent: ", finishTime - startTime);
 };
 
 requestMasseges = function() {
@@ -165,7 +157,6 @@ requestMasseges = function() {
 
 sort = function () {
     var c, l = bufferForInformation.length, i, buf;
-    console.log(l);
 
     if (keyForSortDirections === true) {
         bufferForInformation = _.sortBy(bufferForInformation, function (bufferForInformation) {
@@ -174,8 +165,7 @@ sort = function () {
     } else {
         bufferForInformation.reverse();
     }
-
-    /*
+    /* // або бульбашкове сортування
     for (c = 0; c < l; c++) {
         for (i = 0; i < l - 1; i++) {
             if (keyForSortDirections === false) {
@@ -196,5 +186,4 @@ sort = function () {
         }
     }
     */
-    console.log(bufferForInformation[0].street, "3");
 };
